@@ -1,0 +1,13 @@
+@use "../abstract/" as *;
+
+button {
+    cursor: pointer;
+}
+
+button.order {
+    background-color: $background-btn-order;
+}
+
+.unavailable-button {
+    cursor: default !important;
+}

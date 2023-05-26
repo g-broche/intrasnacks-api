@@ -1,0 +1,47 @@
+$font-large: 20px;
+$font-medium: 16px;
+$font-small: 12px;
+
+$fontSrc: "./fonts/";
+
+@font-face {
+    font-family: 'robotoregular';
+    src: url($fontSrc+'Roboto-Regular-webfont.woff') format('woff'),
+        url($fontSrc+'Roboto-Regular-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'robotoregular', Arial, sans-serif;
+}
+
+p,
+span,
+input,
+button {
+    font-family: 'robotoregular', Arial, sans-serif;
+}
+
+h2 {
+    font-size: $font-large;
+}
+
+h3,
+h4 {
+    font-size: $font-medium;
+}
+
+h5,
+h6,
+p,
+span,
+input,
+button {
+    font-size: $font-small;
+}

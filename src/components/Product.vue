@@ -35,8 +35,9 @@ const pathToImg = ref("./img/")
     <div :class="product.stock > 0 ? 'product-wrapper' : 'product-wrapper unavailable-article'">
         <header class="image-container">
             <img :src="pathToImg + product.image_name" :alt="product.image_name">
-            <span :class="product.stock > 0 ? 'productStock' : 'productStock unavailable-stock'">stock: {{ product.stock
-            }}</span>
+            <div class="favoriteToggle">
+                <img :src="product.is_favourite ? pathToImg + 'star-full.webp' : pathToImg + 'star-empty.webp'">
+            </div>
         </header>
         <main class="product-description">
             <h3 class="product-description__name">{{ product.name }}</h3>
@@ -70,12 +71,17 @@ const pathToImg = ref("./img/")
             height: 100%;
         }
 
-        .productStock {
+        .favoriteToggle {
             position: absolute;
-            top: 0px;
-            right: 0px;
-            padding: 3px;
-            font-size: $font-medium;
+            top: 3px;
+            right: 3px;
+            width: 36px;
+            height: 36px;
+
+            img {
+                object-fit: cover;
+                width: 100%
+            }
         }
     }
 

@@ -14,6 +14,10 @@ function updateProductStock(infos) {
   const productToUpdate = products.value.find(product => product.id === infos.id)
   productToUpdate.stock = infos.stock
 }
+function updateProductFavorite(infos) {
+  const productToUpdate = products.value.find(product => product.id === infos.id)
+  productToUpdate.is_favourite = infos.favoriteStatus
+}
 </script>
 
 <template>
@@ -22,7 +26,8 @@ function updateProductStock(infos) {
 
       <main class="content__grid-article">
         <article v-for="product in products">
-          <Product :product="product" @updatedProduct="updateProductStock" />
+          <Product :product="product" @updatedProduct="updateProductStock"
+            @updatedProductFavoriteStatus="updateProductFavorite" />
         </article>
       </main>
     </section>

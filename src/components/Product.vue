@@ -2,12 +2,19 @@
 import { ref, computed } from 'vue';
 import axios from 'axios';
 
-const emits = defineEmits(['updatedProduct']);
+const emits = defineEmits(['updatedProduct', 'updatedProductFavoriteStatus']);
 
 const updateProduct = (infos) => {
     const updatedData = { id: infos.id, stock: infos.stock };
     emits('updatedProduct', updatedData);
 }
+// productId' => $productId, 'isNowFavourite
+const updateProductFavoriteStatus = (infos) => {
+    const updatedFavStatus = { id: infos.productId, favoriteStatus: infos.isNowFavourite };
+    emits('updatedProductFavoriteStatus', updatedFavStatus)
+}
+
+
 
 defineProps(
     {
@@ -28,6 +35,21 @@ async function order(id) {
     }
 }
 
+async function toggleFavorite(productId, newFavoriteStatus) {
+    let result = []
+    await axios
+        .post("http://localhost:8000/api/product/toggleFavorite", {
+            userToken: 777,
+            productId: productId,
+            isFavourite: newFavoriteStatus
+        })
+        .then(response => { result = response.data })
+    if (result.success) {
+        updateProductFavoriteStatus(result)
+    }
+}
+
+
 const pathToImg = ref("./img/")
 </script>
 
@@ -35,7 +57,7 @@ const pathToImg = ref("./img/")
     <div :class="product.stock > 0 ? 'product-wrapper' : 'product-wrapper unavailable-article'">
         <header class="image-container">
             <img :src="pathToImg + product.image_name" :alt="product.image_name">
-            <div class="favoriteToggle">
+            <div class="favoriteToggle" @click="toggleFavorite(product.id, !product.is_favourite)">
                 <img :src="product.is_favourite ? pathToImg + 'star-full.webp' : pathToImg + 'star-empty.webp'">
             </div>
         </header>

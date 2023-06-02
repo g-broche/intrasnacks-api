@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 import axios from 'axios';
+import { useClientStore } from '@/stores/client'
+const storeClient = useClientStore()
 
 const emits = defineEmits(['updatedProduct', 'updatedProductFavoriteStatus']);
 
@@ -8,13 +10,10 @@ const updateProduct = (infos) => {
     const updatedData = { id: infos.id, stock: infos.stock };
     emits('updatedProduct', updatedData);
 }
-// productId' => $productId, 'isNowFavourite
 const updateProductFavoriteStatus = (infos) => {
     const updatedFavStatus = { id: infos.productId, favoriteStatus: infos.isNowFavourite };
     emits('updatedProductFavoriteStatus', updatedFavStatus)
 }
-
-
 
 defineProps(
     {
@@ -28,10 +27,14 @@ defineProps(
 async function order(id) {
     let result = []
     await axios
-        .get("http://localhost:8000/api/product/consume?id=" + id)
+        .post("http://localhost:8000/api/product/consume", {
+            userToken: 777,
+            productId: id,
+        })
         .then(response => { result = response.data })
     if (result.success) {
-        updateProduct(result.infos)
+        updateProduct(result.infos.product)
+        storeClient.updateSolde(result.infos.client.solde)
     }
 }
 

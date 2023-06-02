@@ -33,7 +33,8 @@ h2 {
 }
 
 h3,
-h4 {
+h4,
+button {
     font-size: $font-medium;
 }
 
@@ -41,7 +42,6 @@ h5,
 h6,
 p,
 span,
-input,
-button {
+input {
     font-size: $font-small;
 }

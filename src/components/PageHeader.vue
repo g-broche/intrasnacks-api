@@ -1,5 +1,11 @@
 <script setup>
+import { useClientStore } from '@/stores/client'
+const storeClient = useClientStore()
 
+function loggout() {
+    storeClient.unsetUser()
+    router.push({ name: 'login' })
+}
 </script>
 
 <template>
@@ -11,17 +17,18 @@
                 </div>
             </a>
 
-            <section class="user-infos">
-                <p id="user-name">Nom Prénom</p>
-                <p id="user-solde">Solde : XXX Crédits</p>
+            <section v-if="storeClient.isUserLogged" class="user-infos">
+
+                <p id="user-name">{{ storeClient.fullName }}</p>
+                <p id="user-solde">Solde : {{ storeClient.currentSolde }} Crédits</p>
             </section>
-            <a href="/logoff">
-                <div class="container-logout">
+            <a v-if="storeClient.isUserLogged" href="/logoff">
+                <div class="container-logout" @click="loggout()">
                     <img src="../../img/logout.webp" alt="logout-button">
                 </div>
             </a>
         </section>
-        <section class="content-header">
+        <section v-if="storeClient.isUserLogged" class="content-header">
             <form class="form-search" action="/searchProducts" method="get">
                 <input class="form-search__field inputField" type="search" id="searchField" name="query"
                     placeholder="Rechercher">

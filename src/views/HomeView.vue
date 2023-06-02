@@ -1,5 +1,7 @@
 <script setup>
 import Product from '../components/Product.vue';
+import PageHeader from '../components/PageHeader.vue';
+import PageFooter from '../components/PageFooter.vue';
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 
@@ -21,6 +23,7 @@ function updateProductFavorite(infos) {
 </script>
 
 <template>
+  <PageHeader />
   <main class="wrapper">
     <section class="content">
 
@@ -32,6 +35,7 @@ function updateProductFavorite(infos) {
       </main>
     </section>
   </main>
+  <PageFooter />
 </template>
 
 

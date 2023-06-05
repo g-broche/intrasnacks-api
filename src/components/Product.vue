@@ -98,6 +98,7 @@ const pathToImg = ref("./img/")
 
         .favoriteToggle {
             position: absolute;
+            cursor: pointer;
             top: 3px;
             right: 3px;
             width: 36px;

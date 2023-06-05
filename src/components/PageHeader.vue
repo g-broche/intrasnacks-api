@@ -1,6 +1,18 @@
 <script setup>
+import { ref } from 'vue';
 import { useClientStore } from '@/stores/client'
 const storeClient = useClientStore()
+const emits = defineEmits(['updatedQuery']);
+
+const query = defineProps(['query'])
+const inputedQuery = ref(null)
+
+
+const updatedQuery = () => {
+    const updatedData = { query: inputedQuery.value };
+    emits('updatedQuery', updatedData);
+}
+
 
 function loggout() {
     storeClient.unsetUser()
@@ -29,14 +41,14 @@ function loggout() {
             </a>
         </section>
         <section v-if="storeClient.isUserLogged" class="content-header">
-            <form class="form-search" action="/searchProducts" method="get">
-                <input class="form-search__field inputField" type="search" id="searchField" name="query"
-                    placeholder="Rechercher">
-                <button class="form-search__submit" type="submit"><img src="../../img/magnifier.svg" alt=""></button>
-            </form>
+            <div class="form-search" action="/searchProducts" method="get">
+                <input v-model="inputedQuery" class="form-search__field inputField" type="search" id="searchField"
+                    name="query" placeholder="Rechercher">
+                <button class="form-search__submit"><img src="../../img/magnifier.svg" alt=""
+                        @click="updatedQuery()"></button>
+            </div>
             <h1 class="title">Catalogue produits</h1>
         </section>
-
 
 
     </header>

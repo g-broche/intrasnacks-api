@@ -1,15 +1,29 @@
+<script setup>
+import { RouterLink } from 'vue-router';
+import { useClientStore } from '@/stores/client'
+const storeClient = useClientStore()
+
+const areFavDisplayed = defineProps(['favStatus'])
+
+const emits = defineEmits(['toggleFavorites']);
+
+const toggle = () => {
+    const updatedData = { mustDisplayFav: !areFavDisplayed.favStatus };
+    emits('toggleFavorites', updatedData);
+}
+</script>
+
 <template>
     <footer>
-        <nav>
+        <nav v-if="storeClient.isUserLogged">
             <div class="nav-item">
                 <div class="nav-item__img-container"><img src="../../img/home.webp" alt=""></div>
 
                 <h3 class="nav-item__title">Accueil</h3>
             </div>
             <div class="nav-item">
-                <div class=" nav-item__img-container"><img src="../../img/star.webp" alt="">
+                <div class=" nav-item__img-container"><img src="../../img/star.webp" alt="" @click="() => { toggle() }">
                 </div>
-
                 <h3 class="nav-item__title">Favoris</h3>
             </div>
             <div class="nav-item">
@@ -25,10 +39,6 @@
 
     </footer>
 </template>
-
-<script setup>
-import { RouterLink } from 'vue-router';
-</script>
 
 <style lang="scss" scoped>
 @use "../src/scss/abstract/" as *;

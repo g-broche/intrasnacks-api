@@ -46,14 +46,6 @@ async function requestLogin() {
   }
 }
 
-// setUser(data) {
-//             this.islogged = true
-//             this.firstName = data.firstName
-//             this.lastName = data.lastName
-//             this.solde = data.solde
-//             this.token = data.token
-//         }
-
 function displayError() {
   console.log("display function")
   error.mustDisplay = true;

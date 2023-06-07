@@ -7,9 +7,10 @@ import { ref, reactive, computed } from 'vue';
 import axios from 'axios';
 import { useClientStore } from '@/stores/client'
 import router from '../router';
+import PageFooter from '../components/PageFooter.vue';
 const storeClient = useClientStore()
 
-const error = reactive({
+const error = ref({
   lastMessage: "",
   mustDisplay: false
 })
@@ -23,7 +24,7 @@ function attemptLogin() {
   if (password.value !== null && password.value === passwordConfirm.value && email.value !== null) {
     requestLogin()
   } else {
-    error.lastMessage = "le mot de passe et sa confirmation sont différents!"
+    error.value.lastMessage = "le mot de passe et sa confirmation sont différents!"
     displayError()
   }
 }
@@ -41,16 +42,17 @@ async function requestLogin() {
     router.push({ name: 'home' })
   } else {
     storeClient.unsetUser()
-    error.lastMessage = result.error
+    error.value.lastMessage = result.error
     displayError()
   }
 }
 
 function displayError() {
   console.log("display function")
-  error.mustDisplay = true;
+  console.log(error.value.lastMessage)
+  error.value.mustDisplay = true;
   setTimeout(() => {
-    error.mustDisplay = false
+    error.value.mustDisplay = false
   }, 5000)
 }
 
@@ -83,6 +85,7 @@ function displayError() {
       </section>
     </section>
   </main>
+  <PageFooter />
 </template>
 
 <style lang="scss" scoped>
@@ -99,9 +102,9 @@ main.wrapper {
     height: 100%;
     width: 100%;
     padding: $paddingX-page;
+    background-color: $background-secondary;
     display: flex;
     flex-direction: column;
-    align-items: center;
 
     div.error {
       position: absolute;

@@ -4,6 +4,18 @@ import PageHeader from '../components/PageHeader.vue';
 import PageFooter from '../components/PageFooter.vue';
 import axios from 'axios';
 import { ref, onMounted, computed, onUpdated } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+const router = useRouter()
+const route = useRoute()
+
+const isDisplayEmpty = ref(false)
+const isDataFetched = ref(false)
+const mustDisplay = ref(
+  {
+    favoriteOnly: false,
+    query: ""
+  }
+)
 
 const products = ref(null)
 onMounted(async () => {
@@ -13,16 +25,9 @@ onMounted(async () => {
       products.value = response.data
       isDataFetched.value = true
     });
+  await router.isReady()
+  mustDisplay.value.favoriteOnly = route.query.favorites
 })
-const isDisplayEmpty = ref(true)
-const isDataFetched = ref(false)
-
-const mustDisplay = ref(
-  {
-    favoriteOnly: false,
-    query: ""
-  }
-)
 
 function updateProductStock(infos) {
   const productToUpdate = products.value.find(product => product.id === infos.id)
@@ -33,7 +38,6 @@ function updateProductFavorite(infos) {
   productToUpdate.is_favourite = infos.favoriteStatus
 }
 
-
 const filteredList = computed(() => {
   let toDisplay = []
   if (isDataFetched.value) {
@@ -41,14 +45,13 @@ const filteredList = computed(() => {
     toDisplay = (mustDisplay.value.favoriteOnly
       ? products.value.filter((product) => product.is_favourite && product.name.includes(mustDisplay.value.query))
       : products.value.filter((product) => product.name.includes(mustDisplay.value.query)))
+    if (toDisplay.length > 0) {
+      isDisplayEmpty.value = false
+      return toDisplay
+    } else {
+      isDisplayEmpty.value = true
+    }
   }
-  if (toDisplay.length != []) {
-    isDisplayEmpty.value = false
-    return toDisplay
-  } else {
-    isDisplayEmpty.value = true
-  }
-
 })
 
 function updateQuery(value) {
@@ -68,8 +71,9 @@ function updateQuery(value) {
       </main>
     </section>
   </main>
-  <PageFooter :favStatus="mustDisplay.favoriteOnly"
-    @toggleFavorites="(newValue) => { mustDisplay.favoriteOnly = newValue.mustDisplayFav }" />
+  <PageFooter :favStatus="mustDisplay.favoriteOnly" @toggleFavorites="(newValue) => {
+    mustDisplay.favoriteOnly = newValue.mustDisplayFav
+  }" />
 </template>
 
 
@@ -88,6 +92,7 @@ main.wrapper {
     margin-top: 185px;
     min-height: 100%;
     padding: 20px $paddingX-page;
+    background-color: $background-secondary;
 
     &__warning {
       font-size: $font-medium;
@@ -95,7 +100,8 @@ main.wrapper {
 
     &__grid-article {
       width: 100%;
-      height: 100%;
+      height: fit-content;
+      padding-bottom: $footerHeight;
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-auto-rows: 1fr;

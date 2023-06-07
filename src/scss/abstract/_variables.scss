@@ -7,5 +7,7 @@ $background-btn-order: #F4A023;
 
 $paddingX-page: 10px;
 
-$headerHeight: 100px;
+$bannerHeight: 100px;
+$pageHeaderHeight: 85px;
+$headerHeight: $bannerHeight+$pageHeaderHeight;
 $footerHeight: 100px;

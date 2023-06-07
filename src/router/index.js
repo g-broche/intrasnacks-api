@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { inject } from 'vue'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
+import HistoryView from '../views/HistoryView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,8 +18,13 @@ const router = createRouter({
       component: LoginView,
       beforeEnter: (to, from) => {
         const client = inject('storeClient')
-        if (client.isUserLogged) to({ name: '/' })
+        if (client.isUserLogged) to({ name: 'home' })
       }
+    },
+    {
+      path: '/history',
+      name: 'history',
+      component: HistoryView,
     },
   ]
 })

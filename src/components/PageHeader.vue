@@ -1,7 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useClientStore } from '@/stores/client'
+import { useRouter } from 'vue-router';
+
 const storeClient = useClientStore()
+const router = useRouter()
 const emits = defineEmits(['updatedQuery']);
 
 const query = defineProps(['query'])
@@ -14,10 +17,31 @@ const updatedQuery = () => {
 }
 
 
-function loggout() {
+function logout() {
     storeClient.unsetUser()
     router.push({ name: 'login' })
 }
+
+const isHome = computed(() => {
+    return router.currentRoute.value.name === 'home'
+})
+const pageTitle = computed(() => {
+    let title = ""
+    switch (router.currentRoute.value.name) {
+        case 'login':
+            title = "Connection"
+            break;
+        case 'home':
+            title = "Catalogue produits"
+            break;
+        case 'history':
+            title = "Historique des achats"
+            break;
+        default:
+            title = ""
+    }
+    return title
+})
 </script>
 
 <template>
@@ -35,19 +59,19 @@ function loggout() {
                 <p id="user-solde">Solde : {{ storeClient.currentSolde }} Crédits</p>
             </section>
             <a v-if="storeClient.isUserLogged" href="/logoff">
-                <div class="container-logout" @click="loggout()">
+                <div class="container-logout" @click="logout()">
                     <img src="../../img/logout.webp" alt="logout-button">
                 </div>
             </a>
         </section>
-        <section v-if="storeClient.isUserLogged" class="content-header">
-            <div class="form-search" action="/searchProducts" method="get">
+        <section class="content-header">
+            <div v-if="isHome && storeClient.isUserLogged" class="form-search" action="/searchProducts" method="get">
                 <input v-model="inputedQuery" class="form-search__field inputField" type="search" id="searchField"
                     name="query" placeholder="Rechercher">
                 <button class="form-search__submit"><img src="../../img/magnifier.svg" alt=""
                         @click="updatedQuery()"></button>
             </div>
-            <h1 class="title">Catalogue produits</h1>
+            <h1 class="title">{{ pageTitle }}</h1>
         </section>
 
 
@@ -64,7 +88,7 @@ header {
     width: 100%;
 
     .banner {
-        height: $headerHeight;
+        height: $bannerHeight;
         width: 100%;
         padding: 0 $paddingX-page;
         background-color: $background-primary;
@@ -106,7 +130,7 @@ header {
     }
 
     .content-header {
-        height: 85px;
+        height: $pageHeaderHeight;
         width: 100%;
         padding: 0 $paddingX-page;
         background-color: $background-secondary;

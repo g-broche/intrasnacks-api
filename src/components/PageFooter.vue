@@ -1,7 +1,11 @@
 <script setup>
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router';
 import { useClientStore } from '@/stores/client'
+import { useRouter } from 'vue-router';
+
 const storeClient = useClientStore()
+const router = useRouter()
 
 const areFavDisplayed = defineProps(['favStatus'])
 
@@ -10,6 +14,14 @@ const emits = defineEmits(['toggleFavorites']);
 const toggle = () => {
     const updatedData = { mustDisplayFav: !areFavDisplayed.favStatus };
     emits('toggleFavorites', updatedData);
+}
+
+const isHome = computed(() => {
+    return router.currentRoute.value.name === 'home'
+})
+
+function redirectToFavorites() {
+    router.push({ name: 'home', query: { "favorites": true } })
 }
 </script>
 
@@ -22,12 +34,17 @@ const toggle = () => {
                 <h3 class="nav-item__title">Accueil</h3>
             </div>
             <div class="nav-item">
-                <div class=" nav-item__img-container"><img src="../../img/star.webp" alt="" @click="() => { toggle() }">
+                <div v-if="isHome" class=" nav-item__img-container"><img src="../../img/star.webp" alt=""
+                        @click="() => { toggle() }">
+                </div>
+                <div v-else class=" nav-item__img-container"><img src="../../img/star.webp" alt=""
+                        @click="() => { redirectToFavorites() }">
                 </div>
                 <h3 class="nav-item__title">Favoris</h3>
             </div>
             <div class="nav-item">
-                <div class="nav-item__img-container"><img src="../../img/history.webp" alt=""></div>
+                <div class="nav-item__img-container"><img src="../../img/history.webp" alt=""
+                        @click="() => { router.push({ name: 'history' }) }"></div>
 
                 <h3 class="nav-item__title">Historique</h3>
             </div>
